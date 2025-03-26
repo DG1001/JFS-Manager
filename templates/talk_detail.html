@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}{{ talk.title }} - Java Forum Stuttgart 2025{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <a href="/" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Zurück zur Übersicht
+    </a>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header header-bg text-white">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1 class="h3 mb-0">{{ talk.title }}</h1>
+            <span class="badge topic-badge">{{ talk.topicId }}</span>
+        </div>
+        {% if talk.subTitle %}
+        <p class="mb-0 mt-2">{{ talk.subTitle }}</p>
+        {% endif %}
+    </div>
+    <div class="card-body">
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <h5>Beschreibung</h5>
+                <div class="mb-3">
+                    {% for paragraph in talk.abstract.split('\n\n') %}
+                    <p>{{ paragraph|replace('\n', '<br>')|safe }}</p>
+                    {% endfor %}
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <h5>Details</h5>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><strong>Sprache:</strong> {{ talk.languageId }}</li>
+                            <li class="list-group-item"><strong>Level:</strong> {{ talk.levelId }}</li>
+                            <li class="list-group-item"><strong>Zielgruppe:</strong> {{ talk.audienceId }}</li>
+                            <li class="list-group-item"><strong>Art:</strong> {{ talk.kindId }}</li>
+                            {% if talk.demo %}
+                            <li class="list-group-item"><strong>Live-Demo:</strong> {{ "Ja" if talk.demo == "ja" else "Nein" }}</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Schlagworte</h5>
+                        {% if talk.keywords %}
+                        <div>
+                            {% for keyword in talk.keywords.split(',') %}
+                            <span class="badge bg-secondary me-1 mb-1">{{ keyword.strip() }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <p>Keine Schlagworte angegeben</p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                {% if talk.comments %}
+                <div class="mb-3">
+                    <h5>Anmerkungen</h5>
+                    <div class="card">
+                        <div class="card-body">
+                            {{ talk.comments|replace('\n', '<br>')|safe }}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5 class="mb-0">Sprecher</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if talk.speaker %}
+                        <div class="text-center mb-3">
+                            <img src="{{ url_for('static', filename='img/' + talk.speaker.imageFile) if talk.speaker.imageFile else 'https://via.placeholder.com/150' }}" 
+                                 alt="{{ talk.speaker.firstName }} {{ talk.speaker.surName }}" 
+                                 class="rounded-circle img-fluid mb-2" style="max-width: 150px;">
+                            <h5>{{ talk.speaker.salutation }} {% if talk.speaker.acadTitle %}{{ talk.speaker.acadTitle }}{% endif %} {{ talk.speaker.firstName }} {{ talk.speaker.surName }}</h5>
+                            <p>{{ talk.speaker.company }}</p>
+                            <a href="{{ url_for('speaker_detail', speaker_id=talk.speaker.id) }}" class="btn btn-sm btn-outline-primary">Profil anzeigen</a>
+                        </div>
+                        
+                        <div class="bio-text">
+                            {{ talk.speaker.bio|replace('\n', '<br>')|safe }}
+                        </div>
+                        <button class="btn btn-sm btn-link expand-bio">Mehr anzeigen</button>
+                        {% else %}
+                        <p>Keine Sprecherinformationen verfügbar</p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                {% if talk.co_speakers and talk.co_speakers|length > 0 %}
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Co-Sprecher</h5>
+                    </div>
+                    <div class="card-body">
+                        {% for co_speaker in talk.co_speakers %}
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="flex-shrink-0">
+                                <img src="{{ url_for('static', filename='img/' + co_speaker.imageFile) if co_speaker.imageFile else 'https://via.placeholder.com/50' }}" 
+                                     alt="{{ co_speaker.firstName }} {{ co_speaker.surName }}" 
+                                     class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h6 class="mb-0">{{ co_speaker.firstName }} {{ co_speaker.surName }}</h6>
+                                <small>{{ co_speaker.company }}</small>
+                                <div>
+                                    <a href="{{ url_for('speaker_detail', speaker_id=co_speaker.id) }}" class="btn btn-sm btn-link p-0">Profil anzeigen</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

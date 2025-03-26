@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}Talks - Java Forum Stuttgart 2025{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h1 class="display-4">Java Forum Stuttgart 2025</h1>
+        <p class="lead">Entdecken Sie die spannenden Vorträge und Sprecher des diesjährigen Forums</p>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Filter</h5>
+                <div class="row">
+                    <div class="col-md-4 mb-2">
+                        <select class="form-select" id="topicFilter">
+                            <option value="">Alle Themen</option>
+                            <option value="Core Java & JVM-Sprachen">Core Java & JVM-Sprachen</option>
+                            <option value="Methodik & Praxis">Methodik & Praxis</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <select class="form-select" id="languageFilter">
+                            <option value="">Alle Sprachen</option>
+                            <option value="Deutsch">Deutsch</option>
+                            <option value="Englisch">Englisch</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <select class="form-select" id="levelFilter">
+                            <option value="">Alle Level</option>
+                            <option value="Anfänger">Anfänger</option>
+                            <option value="Fortgeschritten">Fortgeschritten</option>
+                            <option value="Experte">Experte</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row row-cols-1 row-cols-md-2 g-4 mb-5">
+    {% for talk_id, talk in talks.items() %}
+    <div class="col talk-item" 
+         data-topic="{{ talk.topicId }}" 
+         data-language="{{ talk.languageId }}" 
+         data-level="{{ talk.levelId }}">
+        <div class="card talk-card h-100 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="badge topic-badge">{{ talk.topicId }}</span>
+                    <span class="badge bg-secondary">{{ talk.levelId }}</span>
+                </div>
+                <h5 class="card-title">{{ talk.title }}</h5>
+                {% if talk.subTitle %}
+                <h6 class="card-subtitle mb-2 text-muted">{{ talk.subTitle }}</h6>
+                {% endif %}
+                <p class="card-text">
+                    {{ talk.abstract.split('\n')[0] }}{% if talk.abstract.count('\n') > 0 %}...{% endif %}
+                </p>
+                
+                <div class="d-flex align-items-center mt-3">
+                    {% if talk.speaker %}
+                    <div class="flex-shrink-0">
+                        <img src="{{ url_for('static', filename='img/' + talk.speaker.imageFile) if talk.speaker.imageFile else 'https://via.placeholder.com/100' }}" 
+                             alt="{{ talk.speaker.firstName }} {{ talk.speaker.surName }}" 
+                             class="speaker-img">
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="mb-0">{{ talk.speaker.firstName }} {{ talk.speaker.surName }}</h6>
+                        <small class="text-muted">{{ talk.speaker.company }}</small>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="mt-3">
+                    <a href="{{ url_for('talk_detail', talk_id=talk_id) }}" class="btn btn-outline-primary">Details</a>
+                </div>
+            </div>
+            <div class="card-footer text-muted">
+                <small>
+                    <i class="bi bi-translate"></i> {{ talk.languageId }}
+                    {% if talk.demo == "ja" %}
+                    <span class="ms-2"><i class="bi bi-laptop"></i> Live-Demo</span>
+                    {% endif %}
+                </small>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const topicFilter = document.getElementById('topicFilter');
+        const languageFilter = document.getElementById('languageFilter');
+        const levelFilter = document.getElementById('levelFilter');
+        const talkItems = document.querySelectorAll('.talk-item');
+        
+        function filterTalks() {
+            const topicValue = topicFilter.value;
+            const languageValue = languageFilter.value;
+            const levelValue = levelFilter.value;
+            
+            talkItems.forEach(item => {
+                const matchesTopic = !topicValue || item.dataset.topic === topicValue;
+                const matchesLanguage = !languageValue || item.dataset.language === languageValue;
+                const matchesLevel = !levelValue || item.dataset.level === levelValue;
+                
+                if (matchesTopic && matchesLanguage && matchesLevel) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+        
+        topicFilter.addEventListener('change', filterTalks);
+        languageFilter.addEventListener('change', filterTalks);
+        levelFilter.addEventListener('change', filterTalks);
+    });
+</script>
+{% endblock %}

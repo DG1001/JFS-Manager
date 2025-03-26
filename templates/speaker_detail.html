@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}{{ speaker.firstName }} {{ speaker.surName }} - Java Forum Stuttgart 2025{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <a href="/" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Zurück zur Übersicht
+    </a>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header header-bg text-white">
+        <h1 class="h3 mb-0">{{ speaker.salutation }} {% if speaker.acadTitle %}{{ speaker.acadTitle }}{% endif %} {{ speaker.firstName }} {{ speaker.surName }}</h1>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3 text-center mb-4">
+                <img src="{{ url_for('static', filename='img/' + speaker.imageFile) if speaker.imageFile else 'https://via.placeholder.com/200' }}" 
+                     alt="{{ speaker.firstName }} {{ speaker.surName }}" 
+                     class="img-fluid rounded-circle mb-3" style="max-width: 200px;">
+                
+                <h5>{{ speaker.company }}</h5>
+                
+                {% if speaker.companyWebUrl %}
+                <p>
+                    <a href="https://{{ speaker.companyWebUrl }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-globe"></i> Website
+                    </a>
+                </p>
+                {% endif %}
+                
+                {% if speaker.projectWebUrl %}
+                <p>
+                    <a href="https://{{ speaker.projectWebUrl }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-code-slash"></i> Projekt
+                    </a>
+                </p>
+                {% endif %}
+            </div>
+            
+            <div class="col-md-9">
+                <h4>Biografie</h4>
+                <div class="mb-4">
+                    {{ speaker.bio|replace('\n', '<br>')|safe }}
+                </div>
+                
+                <h4>Kontakt</h4>
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <ul class="list-group list-group-flush">
+                            {% if speaker.eMail %}
+                            <li class="list-group-item">
+                                <i class="bi bi-envelope"></i> 
+                                <a href="mailto:{{ speaker.eMail }}">{{ speaker.eMail }}</a>
+                            </li>
+                            {% endif %}
+                            
+                            {% if speaker.phone %}
+                            <li class="list-group-item">
+                                <i class="bi bi-telephone"></i> {{ speaker.phone }}
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <ul class="list-group list-group-flush">
+                            {% if speaker.address or speaker.zipCode or speaker.city %}
+                            <li class="list-group-item">
+                                <i class="bi bi-geo-alt"></i> 
+                                {{ speaker.address }}{% if speaker.address %}, {% endif %}
+                                {{ speaker.zipCode }} {{ speaker.city }}
+                            </li>
+                            {% endif %}
+                            
+                            {% if speaker.country %}
+                            <li class="list-group-item">
+                                <i class="bi bi-globe2"></i> {{ speaker.country }}
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+                
+                <h4>Vorträge auf dem Java Forum Stuttgart 2025</h4>
+                {% if talks %}
+                <div class="row row-cols-1 row-cols-md-2 g-4">
+                    {% for talk_id, talk in talks.items() %}
+                    <div class="col">
+                        <div class="card h-100 talk-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="badge topic-badge">{{ talk.topicId }}</span>
+                                    <span class="badge bg-secondary">{{ talk.levelId }}</span>
+                                </div>
+                                <h5 class="card-title">{{ talk.title }}</h5>
+                                <p class="card-text">
+                                    {{ talk.abstract.split('\n')[0] }}{% if talk.abstract.count('\n') > 0 %}...{% endif %}
+                                </p>
+                                <a href="{{ url_for('talk_detail', talk_id=talk_id) }}" class="btn btn-outline-primary">Details</a>
+                            </div>
+                            <div class="card-footer text-muted">
+                                <small>
+                                    <i class="bi bi-translate"></i> {{ talk.languageId }}
+                                    {% if talk.demo == "ja" %}
+                                    <span class="ms-2"><i class="bi bi-laptop"></i> Live-Demo</span>
+                                    {% endif %}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    Keine Vorträge gefunden.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
