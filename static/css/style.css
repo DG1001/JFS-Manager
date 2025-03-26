@@ -6,3 +6,20 @@
 .jfs-blue {
     color: #1a365d;
 }
+
+.keyword-cloud {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    min-height: 300px;
+}
+
+.keyword-tag {
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.keyword-tag:hover {
+    transform: scale(1.1);
+    text-decoration: none;
+}

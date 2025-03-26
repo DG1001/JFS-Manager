@@ -1,5 +1,6 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import json
+from collections import Counter
 
 app = Flask(__name__)
 
@@ -27,6 +28,22 @@ def load_data():
     
     return talks, speakers
 
+def get_all_keywords(talks):
+    """Extrahiert alle Keywords aus den Talks und zählt ihre Häufigkeit"""
+    all_keywords = []
+    for talk in talks.values():
+        if talk.get('keywords'):
+            keywords = [k.strip() for k in talk['keywords'].split(',')]
+            all_keywords.extend(keywords)
+    
+    # Zähle die Häufigkeit jedes Keywords
+    keyword_counter = Counter(all_keywords)
+    
+    # Sortiere nach Häufigkeit (absteigend)
+    sorted_keywords = sorted(keyword_counter.items(), key=lambda x: x[1], reverse=True)
+    
+    return sorted_keywords
+
 @app.route('/')
 def index():
     talks, speakers = load_data()
@@ -36,12 +53,32 @@ def index():
     languages = sorted(set(talk.get('languageId') for talk_id, talk in talks.items() if talk.get('languageId')))
     levels = sorted(set(talk.get('levelId') for talk_id, talk in talks.items() if talk.get('levelId')))
     
+    # Filterung nach Keyword, falls in der URL angegeben
+    keyword_filter = request.args.get('keyword')
+    if keyword_filter:
+        filtered_talks = {}
+        for talk_id, talk in talks.items():
+            if talk.get('keywords') and keyword_filter.lower() in talk.get('keywords').lower():
+                filtered_talks[talk_id] = talk
+        talks = filtered_talks
+    
     return render_template('index.html', 
                           talks=talks, 
                           speakers=speakers, 
                           topics=topics,
                           languages=languages,
-                          levels=levels)
+                          levels=levels,
+                          keyword_filter=keyword_filter)
+
+@app.route('/keywords')
+def keywords():
+    talks, _ = load_data()
+    keywords = get_all_keywords(talks)
+    
+    # Finde die maximale Häufigkeit für die Skalierung
+    max_count = keywords[0][1] if keywords else 1
+    
+    return render_template('keywords.html', keywords=keywords, max_count=max_count)
 
 @app.route('/talk/<talk_id>')
 def talk_detail(talk_id):

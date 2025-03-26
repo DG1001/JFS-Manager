@@ -7,6 +7,12 @@
     <div class="col">
         <h1 class="display-4">Java Forum Stuttgart 2025</h1>
         <p class="lead">Entdecken Sie die spannenden Vorträge und Sprecher des diesjährigen Forums</p>
+        {% if keyword_filter %}
+        <div class="alert alert-info">
+            Gefiltert nach Keyword: <strong>{{ keyword_filter }}</strong>
+            <a href="/" class="btn btn-sm btn-outline-secondary ms-2">Filter entfernen</a>
+        </div>
+        {% endif %}
     </div>
 </div>
 

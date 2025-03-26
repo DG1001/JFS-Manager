@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Keyword-Cloud - Java Forum Stuttgart 2025{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h1 class="display-4">Keyword-Cloud</h1>
+        <p class="lead">Die häufigsten Themen und Technologien des Java Forum Stuttgart 2025</p>
+    </div>
+</div>
+
+<div class="card shadow mb-5">
+    <div class="card-body">
+        <div class="keyword-cloud p-4 text-center">
+            {% for keyword, count in keywords %}
+                {% set font_size = 1 + (count / max_count * 2.5) %}
+                {% set opacity = 0.5 + (count / max_count * 0.5) %}
+                <a href="/?keyword={{ keyword }}" 
+                   class="keyword-tag d-inline-block m-2"
+                   style="font-size: {{ font_size }}rem; opacity: {{ opacity }}; color: #{{ '%06x' % ((count * 987654) % 0xffffff) }};">
+                    {{ keyword }}
+                    <span class="badge rounded-pill bg-secondary ms-1">{{ count }}</span>
+                </a>
+            {% endfor %}
+        </div>
+        
+        {% if not keywords %}
+        <div class="alert alert-info">
+            Keine Keywords gefunden.
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Über die Keyword-Cloud</h5>
+                <p>
+                    Die Größe und Farbe jedes Keywords repräsentiert, wie häufig es in den Vorträgen des Java Forum Stuttgart 2025 vorkommt.
+                    Klicken Sie auf ein Keyword, um alle zugehörigen Vorträge zu sehen.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
