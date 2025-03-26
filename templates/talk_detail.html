@@ -92,20 +92,22 @@
                 </div>
                 
                 {% if talk.co_speakers is defined and talk.co_speakers and talk.co_speakers|length > 0 %}
-                <div class="card">
+                <div class="card mt-3">
                     <div class="card-header">
                         <h5 class="mb-0">Co-Sprecher</h5>
                     </div>
                     <div class="card-body">
-                        {% for co_speaker in talk.co_speakers %}
-                        <div class="mb-3">
-                            <h6 class="mb-0">{{ co_speaker.firstName }} {{ co_speaker.surName }}</h6>
-                            <small>{{ co_speaker.company }}</small>
-                            <div>
-                                <a href="{{ url_for('speaker_detail', speaker_id=co_speaker.id) }}" class="btn btn-sm btn-link p-0">Profil anzeigen</a>
+                        <div class="row">
+                            {% for co_speaker in talk.co_speakers %}
+                            <div class="col-md-{% if talk.co_speakers|length > 1 %}6{% else %}12{% endif %} mb-3">
+                                <h6 class="mb-0">{{ co_speaker.firstName }} {{ co_speaker.surName }}</h6>
+                                <small>{{ co_speaker.company }}</small>
+                                <div>
+                                    <a href="{{ url_for('speaker_detail', speaker_id=co_speaker.id) }}" class="btn btn-sm btn-link p-0">Profil anzeigen</a>
+                                </div>
                             </div>
+                            {% endfor %}
                         </div>
-                        {% endfor %}
                     </div>
                 </div>
                 {% endif %}
