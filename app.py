@@ -91,11 +91,19 @@ def talk_detail(talk_id):
 def speaker_detail(speaker_id):
     talks, speakers = load_data()
     if speaker_id in speakers:
-        # Finde alle Talks dieses Sprechers
-        speaker_talks = {talk_id: talk for talk_id, talk in talks.items() 
-                        if talk.get('speakerId') == int(speaker_id) or 
-                           talk.get('coSpeakerId1') == int(speaker_id) or 
-                           talk.get('coSpeakerId2') == int(speaker_id)}
+        # Finde alle Talks dieses Sprechers (als Hauptsprecher oder Co-Sprecher)
+        speaker_id_int = int(speaker_id)
+        speaker_talks = {}
+        
+        for talk_id, talk in talks.items():
+            # Prüfe, ob der Sprecher Hauptsprecher ist
+            if talk.get('speakerId') == speaker_id_int:
+                speaker_talks[talk_id] = talk
+                continue
+                
+            # Prüfe, ob der Sprecher Co-Sprecher ist
+            if talk.get('coSpeakerId1') == speaker_id_int or talk.get('coSpeakerId2') == speaker_id_int:
+                speaker_talks[talk_id] = talk
         
         return render_template('speaker_detail.html', 
                               speaker=speakers[speaker_id], 
