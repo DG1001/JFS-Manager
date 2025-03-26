@@ -19,23 +19,25 @@
                     <div class="col-md-4 mb-2">
                         <select class="form-select" id="topicFilter">
                             <option value="">Alle Themen</option>
-                            <option value="Core Java &amp; JVM-Sprachen">Core Java &amp; JVM-Sprachen</option>
-                            <option value="Methodik &amp; Praxis">Methodik &amp; Praxis</option>
+                            {% for topic in topics %}
+                            <option value="{{ topic }}">{{ topic }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                     <div class="col-md-4 mb-2">
                         <select class="form-select" id="languageFilter">
                             <option value="">Alle Sprachen</option>
-                            <option value="Deutsch">Deutsch</option>
-                            <option value="Englisch">Englisch</option>
+                            {% for language in languages %}
+                            <option value="{{ language }}">{{ language }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                     <div class="col-md-4 mb-2">
                         <select class="form-select" id="levelFilter">
                             <option value="">Alle Level</option>
-                            <option value="Anfänger">Anfänger</option>
-                            <option value="Fortgeschritten">Fortgeschritten</option>
-                            <option value="Experte">Experte</option>
+                            {% for level in levels %}
+                            <option value="{{ level }}">{{ level }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                 </div>

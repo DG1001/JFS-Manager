@@ -30,7 +30,18 @@ def load_data():
 @app.route('/')
 def index():
     talks, speakers = load_data()
-    return render_template('index.html', talks=talks, speakers=speakers)
+    
+    # Sammle alle einzigartigen Themen, Sprachen und Level
+    topics = sorted(set(talk.get('topicId') for talk_id, talk in talks.items() if talk.get('topicId')))
+    languages = sorted(set(talk.get('languageId') for talk_id, talk in talks.items() if talk.get('languageId')))
+    levels = sorted(set(talk.get('levelId') for talk_id, talk in talks.items() if talk.get('levelId')))
+    
+    return render_template('index.html', 
+                          talks=talks, 
+                          speakers=speakers, 
+                          topics=topics,
+                          languages=languages,
+                          levels=levels)
 
 @app.route('/talk/<talk_id>')
 def talk_detail(talk_id):
