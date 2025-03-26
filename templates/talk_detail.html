@@ -94,7 +94,7 @@
                     </div>
                 </div>
                 
-                {% if talk.co_speakers and talk.co_speakers|length > 0 %}
+                {% if talk.co_speakers is defined and talk.co_speakers and talk.co_speakers|length > 0 %}
                 <div class="card">
                     <div class="card-header">
                         <h5 class="mb-0">Co-Sprecher</h5>

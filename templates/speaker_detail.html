@@ -96,7 +96,7 @@
                                 </div>
                                 <h5 class="card-title">{{ talk.title }}</h5>
                                 <p class="card-text">
-                                    {{ talk.abstract.split('\n')[0] }}{% if talk.abstract.count('\n') > 0 %}...{% endif %}
+                                    {% if talk.abstract %}{{ talk.abstract.split('\n')[0] }}{% if talk.abstract.count('\n') > 0 %}...{% endif %}{% endif %}
                                 </p>
                                 <a href="{{ url_for('talk_detail', talk_id=talk_id) }}" class="btn btn-outline-primary">Details</a>
                             </div>
