@@ -66,16 +66,22 @@
                     {% if talk.abstract %}{{ talk.abstract.split('\n')[0] }}{% if talk.abstract.count('\n') > 0 %}...{% endif %}{% endif %}
                 </p>
                 
-                <div class="d-flex align-items-center mt-3">
+                <div class="mt-3">
                     {% if talk.speaker %}
-                    <div class="flex-shrink-0">
-                        <img src="{{ url_for('static', filename='img/' + talk.speaker.imageFile) if talk.speaker.imageFile else 'https://via.placeholder.com/100' }}" 
-                             alt="{{ talk.speaker.firstName }} {{ talk.speaker.surName }}" 
-                             class="speaker-img">
-                    </div>
-                    <div class="flex-grow-1 ms-3">
+                    <div class="mb-2">
                         <h6 class="mb-0">{{ talk.speaker.firstName }} {{ talk.speaker.surName }}</h6>
                         <small class="text-muted">{{ talk.speaker.company }}</small>
+                    </div>
+                    {% endif %}
+                    
+                    {% if talk.co_speakers is defined and talk.co_speakers and talk.co_speakers|length > 0 %}
+                    <div class="mb-2">
+                        <small class="text-muted">
+                            <strong>Co-Sprecher:</strong>
+                            {% for co_speaker in talk.co_speakers %}
+                                {{ co_speaker.firstName }} {{ co_speaker.surName }}{% if not loop.last %}, {% endif %}
+                            {% endfor %}
+                        </small>
                     </div>
                     {% endif %}
                 </div>

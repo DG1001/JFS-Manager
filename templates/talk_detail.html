@@ -76,9 +76,6 @@
                     <div class="card-body">
                         {% if talk.speaker %}
                         <div class="text-center mb-3">
-                            <img src="{{ url_for('static', filename='img/' + talk.speaker.imageFile) if talk.speaker.imageFile else 'https://via.placeholder.com/150' }}" 
-                                 alt="{{ talk.speaker.firstName }} {{ talk.speaker.surName }}" 
-                                 class="rounded-circle img-fluid mb-2" style="max-width: 150px;">
                             <h5>{{ talk.speaker.salutation }} {% if talk.speaker.acadTitle %}{{ talk.speaker.acadTitle }}{% endif %} {{ talk.speaker.firstName }} {{ talk.speaker.surName }}</h5>
                             <p>{{ talk.speaker.company }}</p>
                             <a href="{{ url_for('speaker_detail', speaker_id=talk.speaker.id) }}" class="btn btn-sm btn-outline-primary">Profil anzeigen</a>
@@ -101,18 +98,11 @@
                     </div>
                     <div class="card-body">
                         {% for co_speaker in talk.co_speakers %}
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="flex-shrink-0">
-                                <img src="{{ url_for('static', filename='img/' + co_speaker.imageFile) if co_speaker.imageFile else 'https://via.placeholder.com/50' }}" 
-                                     alt="{{ co_speaker.firstName }} {{ co_speaker.surName }}" 
-                                     class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
-                            </div>
-                            <div class="flex-grow-1 ms-3">
-                                <h6 class="mb-0">{{ co_speaker.firstName }} {{ co_speaker.surName }}</h6>
-                                <small>{{ co_speaker.company }}</small>
-                                <div>
-                                    <a href="{{ url_for('speaker_detail', speaker_id=co_speaker.id) }}" class="btn btn-sm btn-link p-0">Profil anzeigen</a>
-                                </div>
+                        <div class="mb-3">
+                            <h6 class="mb-0">{{ co_speaker.firstName }} {{ co_speaker.surName }}</h6>
+                            <small>{{ co_speaker.company }}</small>
+                            <div>
+                                <a href="{{ url_for('speaker_detail', speaker_id=co_speaker.id) }}" class="btn btn-sm btn-link p-0">Profil anzeigen</a>
                             </div>
                         </div>
                         {% endfor %}

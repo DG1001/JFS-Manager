@@ -16,9 +16,6 @@
     <div class="card-body">
         <div class="row">
             <div class="col-md-3 text-center mb-4">
-                <img src="{{ url_for('static', filename='img/' + speaker.imageFile) if speaker.imageFile else 'https://via.placeholder.com/200' }}" 
-                     alt="{{ speaker.firstName }} {{ speaker.surName }}" 
-                     class="img-fluid rounded-circle mb-3" style="max-width: 200px;">
                 
                 <h5>{{ speaker.company }}</h5>
                 
